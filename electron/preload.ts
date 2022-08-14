@@ -1,17 +1,29 @@
 import ClipboardObserver from './libs/clipboard';
+import IndexDB from './libs/indexDB';
 
 const { contextBridge, ipcRenderer, clipboard } = require('electron');
+
+const indexDB = new IndexDB(window);
+indexDB.init();
 
 const clipboardObserver = new ClipboardObserver({
   textChange: (text: string, beforeText: string) => {
     //  处理文本变化的逻辑
-    console.log('inquire', text, beforeText, ipcRenderer.on, ipcRenderer.send);
     ipcRenderer.send('update-counter', text);
+    indexDB.addData([
+      {
+        createTime: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+        _id: new Date().getTime(),
+        type: 'text',
+        content: text,
+      },
+    ]);
   },
   imageChange: (image: Electron.NativeImage, beforeText: Electron.NativeImage) => {
     //  处理图片变化的逻辑
   },
 });
+
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector);
@@ -32,8 +44,8 @@ window.addEventListener('DOMContentLoaded', () => {
  * */
 function handleWriteLoginInfo() {
   const text = clipboard.readText();
-  console.log(text);
-  console.log(ClipboardObserver);
+  // console.log(text);
+  // console.log(ClipboardObserver);
   clipboardObserver.start();
 
   return ClipboardObserver;

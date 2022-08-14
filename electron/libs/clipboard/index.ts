@@ -17,10 +17,6 @@ class ClipboardObserver {
   imageChange: (image: NativeImage, beforeImage: NativeImage) => void;
 
   constructor(options: Options) {
-    console.log(
-      '🚀 ~ file: index.ts ~ line 20 ~ ClipboardObserver ~ constructor ~ options',
-      options
-    );
     const { duration, textChange, imageChange } = options;
 
     this.duration = duration;
@@ -39,31 +35,13 @@ class ClipboardObserver {
     this.timer = setInterval(() => {
       if (this.textChange) {
         const text = clipboard.readText();
-        console.log('=====', text, this.beforeText);
+
         if (this.isDiffText(this.beforeText, text)) {
-          console.log('2=====2', text, this.beforeText);
           this.textChange(text, this.beforeText);
           this.beforeText = text;
           ipcRenderer.send('counter-value', text);
         }
       }
-
-      // if (this.textChange) {
-      //   console.log('=---');
-      //   const text = clipboard.readText();
-      //   console.log('=====', text, this.beforeText);
-      //   if (this.isDiffText(this.beforeText, text)) {
-      //     console.log('=====asdsasdas');
-      //     //   contextBridge.exposeInMainWorld('electronAPI', {
-      //     //     setTitle: (title) => ipcRenderer.send('set-title', title),
-      //     //   });
-
-      //     console.log('=');
-      //     console.log(text);
-      //     this.textChange(text, this.beforeText);
-      //     this.beforeText = text;
-      //   }
-      // }
 
       if (this.imageChange) {
         const image = clipboard.readImage();
@@ -86,7 +64,6 @@ class ClipboardObserver {
    * 设置剪贴板默认内容
    */
   setClipboardDefaultValue(): void {
-    console.log(clipboard.readText());
     if (this.textChange) {
       this.beforeText = clipboard.readText();
     }
@@ -121,8 +98,6 @@ class ClipboardObserver {
    * 开始
    */
   start(): void {
-    console.log('ial Vue + Vite star213131231231212=================');
-
     this.setClipboardDefaultValue();
     this.setTimer();
   }

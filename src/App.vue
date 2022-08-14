@@ -1,37 +1,31 @@
 <script setup lang="ts">
   // This starter template is using Vue 3 <script setup> SFCs
   // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-  import HelloWorld from './components/HelloWorld.vue';
   import { onMounted, ref } from 'vue';
+  import IndexDB from '../electron/libs/indexDB/index';
 
-  const pasteFont = ref();
+  const indexDB = new IndexDB();
+
+  const clipboardList = ref<any[]>([]);
+
+  async function handleDeleteData(id: string | number, index) {
+    await indexDB.deleteData(id);
+    clipboardList.value.splice(index, 1);
+  }
 
   onMounted(() => {
-    // window.electronAPI.onUpdateCounter((_event, value) => {
-    //   console.log(
-    //     '🚀 ~ file: App.vue ~ line 10 ~ window.electron.onUpdateCounter ~ _event, value',
-    //     _event,
-    //     value
-    //   );
-    // });
-  });
+    indexDB.init();
+    // indexDB.getData();
+    console.log('🚀 ~ file: App.vue ~ line 19 ~ onMounted ~ indexDB', indexDB);
 
-  const pasteFontBtn = () => {
-    // const asd = window.electronAPI.writeLogin();
-    window.electronAPI.onUpdateCounter('abc');
-    // window.electronAPI.onUpdateCounter((_event, value) => {
-    //   console.log(
-    //     '🚀 ~ file: App.vue ~ line 10 ~ window.electron.onUpdateCounter ~ _event, value',
-    //     _event,
-    //     value
-    //   );
-    // });
-  };
+    setInterval(async () => {
+      const data = await indexDB.getData();
+      clipboardList.value = data as any[];
+    }, 1000);
+  });
 </script>
 
 <template>
-  {{ pasteFont }}
-  <button @click="pasteFontBtn">复制粘贴</button>
   <div>
     <a href="https://vitejs.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -40,7 +34,13 @@
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+
+  <ul>
+    <li v-for="(item, index) in clipboardList" :key="item._id" style="text-align: left">
+      {{ item._id }} - {{ item.type }} - {{ item.content }} - {{ item.createDate }}
+      <button @click="handleDeleteData(item._id, index)">X</button>
+    </li>
+  </ul>
 </template>
 
 <style scoped>
