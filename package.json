@@ -1,0 +1,43 @@
+{
+  "name": "vite-vue3-electron",
+  "private": true,
+  "version": "0.0.0",
+  "type": "commonjs",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "electron-tsc": "tsc electron/main.ts electron/preload.ts --outDir dist/main",
+    "electron:build": "pnpm build && pnpm electron-tsc",
+    "electron-dev": "cross-env ELECTRON_DISABLE_SECURITY_WARNINGS=true MODE='development' electron .",
+    "electron:dev": "pnpm electron-tsc && concurrently \"pnpm dev\" \"pnpm electron-dev\"",
+    "preview": "vite preview",
+    "app:build": "pnpm electron:build && pnpm electron-builder"
+  },
+  "dependencies": {
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "concurrently": "^7.3.0",
+    "cross-env": "^7.0.3",
+    "electron": "^19.0.9",
+    "electron-builder": "^23.1.0",
+    "electron-devtools-installer": "^3.2.0",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-define-config": "^1.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.7.1",
+    "stylelint": "^14.9.1",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard": "^26.0.0",
+    "stylelint-order": "^5.0.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vue-tsc": "^0.38.4"
+  }
+}
