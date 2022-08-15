@@ -114,6 +114,6 @@ export interface GlobEnvConfig {
    * API环境
    */
   VITE_API_ENV?: sring;
-  /** SCRM host */
-  VITE_GLOB_SCRM_HOST: string;
+  /** CLIPBOARD host */
+  VITE_GLOB_CLIPBOARD_HOST: string;
 }

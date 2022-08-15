@@ -4,6 +4,7 @@ import * as path from 'path';
 // const path = require("path");
 console.log(process.env.MODE);
 // const loadUrl = process.env.MODE === "devlopment" ? "http://localhost:3000/" : path.join(__dirname, "../src/index.html");
+
 const loadUrl =
   process.env.MODE === 'development'
     ? 'http://localhost:3157/'

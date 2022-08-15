@@ -29,8 +29,32 @@ export default defineConfig(({ command, mode }) => {
     build: {
       outDir: 'dist/src',
     },
+    resolve: {
+      alias: [
+        // /@/xxxx => src/xxxx
+        {
+          find: /\/@\//,
+          replacement: pathResolve('src') + '/',
+        },
+        // /#/xxxx => types/xxxx
+        {
+          find: /\/#\//,
+          replacement: pathResolve('types') + '/',
+        },
+      ],
+    },
     server: {
       port: VITE_PORT,
+    },
+    css: {
+      preprocessorOptions: {
+        less: {
+          modifyVars: {
+            hack: `true; @import (reference) "${resolve('src/design/var/index.less')}";`,
+          },
+          javascriptEnabled: true,
+        },
+      },
     },
   };
 });

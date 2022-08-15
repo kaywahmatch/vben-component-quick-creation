@@ -1,0 +1,50 @@
+@import (reference) 'ant';
+@import 'easing';
+@import 'breakpoint';
+
+@namespace: links;
+
+// tabs
+@multiple-height: 30px;
+
+// headers
+@header-height: 56px;
+@header-bg: linear-gradient(90deg, #356cfe 0%, #2a65f0 100%);
+@header-text-color: #fff;
+@header-hover-color: @primary-color;
+
+// sidebar
+@sidebar-bg: #fff;
+@sidebar-text-color: #666;
+@sidebar-active-color: @primary-color;
+
+// logo width
+@logo-width: 150px;
+@logo-height: 31px;
+
+//
+@side-drag-z-index: 200;
+
+@page-loading-z-index: 10000;
+
+@layout-header-fixed-z-index: 500;
+
+@multiple-tab-fixed-z-index: 505;
+
+@layout-sider-fixed-z-index: 510;
+
+@layout-mix-sider-fixed-z-index: 550;
+
+@preview-comp-z-index: 1000;
+
+@page-footer-z-index: 99;
+
+.bem(@n; @content) {
+  @{namespace}-@{n} {
+    @content();
+  }
+}
+
+.percent(@key, @val, @percent: 2) {
+  @{key}: (@val / 2);
+}

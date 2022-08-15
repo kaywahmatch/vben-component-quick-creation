@@ -1,0 +1,207 @@
+@prefix-cls: ~'@{namespace}-basic-table';
+
+// fix table unnecessary scrollbar
+.@{prefix-cls} {
+  .hide-scrollbar-y {
+    .ant-spin-nested-loading {
+      .ant-spin-container {
+        .ant-table {
+          .ant-table-content {
+            // .ant-table-scroll {
+            //   .ant-table-hide-scrollbar {
+            //     overflow-y: auto !important;
+            //   }
+
+            //   .ant-table-body {
+            //     overflow-y: auto !important;
+            //   }
+            // }
+
+            .ant-table-fixed-right {
+              .ant-table-body-outer {
+                .ant-table-body-inner {
+                  overflow-y: auto !important;
+                }
+              }
+            }
+
+            .ant-table-fixed-left {
+              .ant-table-body-outer {
+                .ant-table-body-inner {
+                  overflow-y: auto !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .hide-scrollbar-x {
+    .ant-spin-nested-loading {
+      .ant-spin-container {
+        .ant-table {
+          .ant-table-content {
+            .ant-table-scroll {
+              .ant-table-hide-scrollbar {
+                //overflow-x: auto !important;
+              }
+
+              .ant-table-body {
+                overflow: auto !important;
+              }
+            }
+
+            .ant-table-fixed-right {
+              .ant-table-body-outer {
+                .ant-table-body-inner {
+                  overflow-x: auto !important;
+                }
+              }
+            }
+
+            .ant-table-fixed-left {
+              .ant-table-body-outer {
+                .ant-table-body-inner {
+                  overflow-x: auto !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-header
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-header
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-left
+  > .ant-table-header
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-right
+  > .ant-table-header
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-left
+  > .ant-table-body-outer
+  > .ant-table-body-inner
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-right
+  > .ant-table-body-outer
+  > .ant-table-body-inner
+  > table
+  > .ant-table-thead
+  > tr
+  > th,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-header
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-body
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-header
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-left
+  > .ant-table-header
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-right
+  > .ant-table-header
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-left
+  > .ant-table-body-outer
+  > .ant-table-body-inner
+  > table
+  > .ant-table-tbody
+  > tr
+  > td,
+.ant-table.ant-table-middle
+  > .ant-table-content
+  > .ant-table-fixed-right
+  > .ant-table-body-outer
+  > .ant-table-body-inner
+  > table
+  > .ant-table-tbody
+  > tr
+  > td {
+  padding: 14px 30px !important;
+}

@@ -15,12 +15,16 @@
     "app:build": "pnpm electron:build && pnpm electron-builder"
   },
   "dependencies": {
-    "vue": "^3.2.37"
+    "less": "^4.1.3",
+    "moment": "^2.29.4",
+    "vue": "^3.2.37",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
     "@vitejs/plugin-vue": "^3.0.1",
+    "ant-design-vue": "^3.2.11",
     "concurrently": "^7.3.0",
     "cross-env": "^7.0.3",
     "electron": "^19.0.9",
