@@ -1,7 +1,17 @@
 <template>
   <Table :dataSource="clipboardList" :columns="columns">
     <template #bodyCell="{ record, index, column }">
-      <template v-if="column.key === 'action'">
+      <!-- 内容 -->
+      <template v-if="column.key === 'content'">
+        <template v-if="record.type === 'text'">
+          {{ record.content }}
+        </template>
+        <template v-else-if="record.type === 'image'">
+          <img :src="JSON.parse(record.content)" style="width: 100px" />
+        </template>
+      </template>
+      <!-- 操作栏 -->
+      <template v-else-if="column.key === 'action'">
         <Button size="small" @click="handleDeleteData(record._id, index)">X</Button>
       </template>
     </template>
@@ -10,8 +20,9 @@
 
 <script lang="ts" setup>
   import { Button, Table } from 'ant-design-vue';
-  import IndexDB from '/@/libs/indexDB';
+  import IndexDB from '../../../electron/libs/indexDB';
   import { onMounted, ref, defineComponent } from 'vue';
+  import { IClipboardList } from '/@/api/clipboard/model';
 
   defineComponent({
     name: 'HomeIndex',
@@ -22,11 +33,13 @@
       title: 'id',
       dataIndex: '_id',
       key: '_id',
+      width: 140,
     },
     {
       title: '类型',
       dataIndex: 'type',
       key: 'type',
+      width: 100,
     },
     {
       title: '内容',
@@ -34,14 +47,20 @@
       key: 'content',
     },
     {
+      title: '分类',
+      dataIndex: 'category',
+      key: 'category',
+    },
+    {
       title: 'Action',
       key: 'action',
+      width: 100,
     },
   ];
 
   const indexDB = new IndexDB();
 
-  const clipboardList = ref<any[]>([]);
+  const clipboardList = ref<IClipboardList[]>([]);
 
   async function handleDeleteData(id: string | number, index: number) {
     await indexDB.deleteData(id);
@@ -49,9 +68,10 @@
   }
 
   onMounted(() => {
+    /**
+     * 初始化
+     */
     indexDB.init();
-    // indexDB.getData();
-    console.log('🚀 ~ file: App.vue ~ line 19 ~ onMounted ~ indexDB', indexDB);
 
     setInterval(async () => {
       const data = await indexDB.getData();

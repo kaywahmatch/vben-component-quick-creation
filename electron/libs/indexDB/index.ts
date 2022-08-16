@@ -1,3 +1,5 @@
+import { IClipboardList } from '/@/api/clipboard/model';
+
 /**
  * indexDB
  */
@@ -28,10 +30,8 @@ class IndexDB {
   init() {
     // 定义 数据库
     const DBOpenRequest = _window.indexedDB.open(this.database.name, this.database.version);
-    // console.log('🚀 ~ file: index.ts ~ line 31 ~ IndexDB ~ init ~ _window', _window);
     console.log('🚀 ~ file: index.ts ~ line 31 ~ IndexDB ~ init ~ init 初始化', DBOpenRequest);
     // 保存数据库变量
-    // let db: IDBDatabase;
 
     // 当数据库打开出错/成功时，以下两个事件处理程序将分别对 IDBDatabase 对象进行下一步操作
     DBOpenRequest.onerror = function () {
@@ -74,7 +74,7 @@ class IndexDB {
   /**
    * 添加数据
    */
-  addData(data: any) {
+  addData(data: IClipboardList[]) {
     /**
      * Create a new object ready for being inserted into the IDB
      */
@@ -118,15 +118,16 @@ class IndexDB {
    */
   getData() {
     const list: Array<any> = [];
+
     const store = this.db
       .transaction(this.database.name, 'readwrite') // 事务
       .objectStore(this.database.name); // 仓库对象
-    const request = store.openCursor(); // 指针对象
-    console.log('🚀 ~ file: index.ts ~ line 125 ~ IndexDB ~ getData ~ store', store);
+
+    // 指针对象
+    const request = store.openCursor(IDBKeyRange.upperBound(this.database.keyPath, true), 'prev');
     return new Promise((resolve, reject) => {
       request.onsuccess = function (e: any) {
         const cursor = e.target!.result;
-        console.log('🚀 ~ file: index.ts ~ line 128 ~ IndexDB ~ returnnewPromise ~ cursor', cursor);
         if (cursor) {
           // 必须要检查
           list.push(cursor.value);

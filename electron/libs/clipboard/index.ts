@@ -1,5 +1,5 @@
 // const { clipboard, NativeImage } = require('electron');
-import { clipboard, NativeImage, ipcRenderer, contextBridge } from 'electron';
+import { clipboard, NativeImage, ipcRenderer } from 'electron';
 
 interface Options {
   duration?: number;
@@ -48,6 +48,7 @@ class ClipboardObserver {
         if (this.isDiffImage(this.beforeImage, image)) {
           this.imageChange(image, this.beforeImage);
           this.beforeImage = image;
+          ipcRenderer.send('counter-value', image);
         }
       }
     }, this.duration);

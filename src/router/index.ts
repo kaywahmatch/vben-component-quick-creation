@@ -3,8 +3,6 @@ import type { App } from 'vue';
 
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { basicRoutes } from './routes';
-import { AppRouteRecordRaw } from './types';
-import { PageEnum } from '../enums/pageEnum';
 
 /**
  * 声明路由
