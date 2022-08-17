@@ -7,7 +7,8 @@
           {{ record.content }}
         </template>
         <template v-else-if="record.type === 'image'">
-          <img :src="JSON.parse(record.content)" style="width: 100px" />
+          <!-- <img :src="JSON.parse(record.content)" style="width: 100px" /> -->
+          {{ record.content }}
         </template>
       </template>
       <!-- 操作栏 -->
