@@ -14,23 +14,12 @@
             <Input v-model:value="formState.queryData" placeholder="placeholder" />
           </FormItem>
         </Col>
-        <!-- <template v-for="i in 10" :key="i">
-        <Col v-show="expand || i <= 6" :span="8">
-          <FormItem
-            :name="`field-${i}`"
-            :label="`field-${i}`"
-            :rules="[{ required: true, message: 'input something' }]"
-          >
-            <Input v-model:value="formState[`field-${i}`]" placeholder="placeholder" />
-          </FormItem>
-        </Col>
-      </template> -->
       </Row>
       <Row>
         <Col :span="24" style="text-align: right">
           <Button type="primary" html-type="submit">Search</Button>
           <Button style="margin: 0 8px" html-type="reset">Clear</Button>
-          <a style="font-size: 12px" @click="expand = !expand">
+          <!-- <a style="font-size: 12px" @click="expand = !expand">
             <template v-if="expand">
               <UpOutlined />
             </template>
@@ -38,12 +27,12 @@
               <DownOutlined />
             </template>
             Collapse
-          </a>
+          </a> -->
         </Col>
       </Row>
     </Form>
     <Table :dataSource="clipboardList" :columns="columns">
-      <template #bodyCell="{ record, column }">
+      <template #bodyCell="{ record, column, index }">
         <!-- 内容 -->
         <template v-if="column.key === 'content'">
           <template v-if="record.type === 'text'">
@@ -56,7 +45,7 @@
         </template>
         <!-- 操作栏 -->
         <template v-else-if="column.key === 'action'">
-          <Button size="small" @click="handleDeleteData(record)" v-if="record._id">X</Button>
+          <Button size="small" @click="handleDeleteData(record, index)" v-if="record._id">X</Button>
         </template>
       </template>
     </Table>
@@ -109,10 +98,15 @@
 
   const clipboardList = ref<IClipboardList[]>([]);
 
-  async function handleDeleteData(record: IClipboardList) {
+  const isSearch = ref(false);
+
+  async function handleDeleteData(record: IClipboardList, index: number) {
     await indexDB.deleteData(record._id!);
     record._id = '';
     record.content = '';
+    if (isSearch.value) {
+      clipboardList.value.splice(index, 1);
+    }
   }
 
   const expand = ref(false);
@@ -121,6 +115,7 @@
     queryData: '',
   });
   const onFinish = async (values: any) => {
+    isSearch.value = true;
     console.log('Received values of form: ', values);
     console.log('formState: ', formState);
     const data = await indexDB.queryData(formState.queryData);
@@ -135,7 +130,9 @@
   }
 
   const onReset = () => {
+    isSearch.value = false;
     console.log('reset');
+    getAllData();
 
     getAllDataRef.value = setInterval(async () => {
       getAllData();
@@ -158,5 +155,9 @@
 <style lang="less" scoped>
   .container {
     padding: 16px;
+  }
+
+  .ant-advanced-search-form {
+    margin-bottom: 10px;
   }
 </style>

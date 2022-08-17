@@ -123,7 +123,7 @@ class IndexDB {
       .transaction(this.database.name, 'readwrite') // 事务
       .objectStore(this.database.name); // 仓库对象
 
-    // 指针对象
+    // 指针对象，倒序返回
     const request = store.openCursor(IDBKeyRange.upperBound(this.database.keyPath, true), 'prev');
     return new Promise((resolve, reject) => {
       request.onsuccess = function (e: any) {
@@ -163,27 +163,58 @@ class IndexDB {
    */
   queryData(queryData: string) {
     const storeName = this.database.name;
-    const db = this.db;
-    console.log('🚀 ~ file: index.ts ~ line 165 ~ IndexDB ~ queryData ~ queryData', queryData);
-    const transaction = db.transaction([storeName], 'readwrite'); // 事务
+    let list: Array<any> = [];
 
-    const objectStore = transaction.objectStore(storeName).index('content'); // 仓库对象
-    const request = objectStore.get(queryData);
+    const store = this.db
+      .transaction(storeName, 'readwrite') // 事务
+      .objectStore(storeName); // 仓库对象
 
+    // 指针对象，倒序返回
+    const request = store.openCursor(IDBKeyRange.upperBound(this.database.keyPath, true), 'prev');
     return new Promise((resolve, reject) => {
-      request.onerror = function (event) {
-        console.log('事务失败');
-        reject(event);
+      request.onsuccess = function (e: any) {
+        const cursor = e.target!.result;
+        if (cursor) {
+          // 必须要检查
+          list.push(cursor.value);
+          cursor.continue(); // 遍历了存储对象中的所有内容
+        } else {
+          list = list
+            .map((item) => {
+              return item.content.indexOf(queryData) >= 0 && item;
+            })
+            .filter(Boolean);
+          resolve(list);
+        }
       };
-
-      request.onsuccess = function (event) {
-        console.log('主键查询结果: ', [request.result]);
-        resolve(request.result ? [request.result] : []);
+      request.onerror = function (err: any) {
+        reject(err);
       };
     });
-
-    return request.result;
   }
+  // queryData(queryData: string) {
+  //   const storeName = this.database.name;
+  //   const db = this.db;
+  //   console.log('🚀 ~ file: index.ts ~ line 165 ~ IndexDB ~ queryData ~ queryData', queryData);
+  //   const transaction = db.transaction([storeName], 'readwrite'); // 事务
+
+  //   const objectStore = transaction.objectStore(storeName).index('content'); // 仓库对象
+  //   const request = objectStore.get(queryData);
+
+  //   return new Promise((resolve, reject) => {
+  //     request.onerror = function (event) {
+  //       console.log('事务失败');
+  //       reject(event);
+  //     };
+
+  //     request.onsuccess = function (event) {
+  //       console.log('主键查询结果: ', [request.result]);
+  //       resolve(request.result ? [request.result] : []);
+  //     };
+  //   });
+
+  //   return request.result;
+  // }
 }
 
 export default IndexDB;
