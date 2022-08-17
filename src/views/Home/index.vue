@@ -22,7 +22,7 @@
   import { Button, Table } from 'ant-design-vue';
   import IndexDB from '../../../electron/libs/indexDB';
   import { onMounted, ref, defineComponent } from 'vue';
-  import { IClipboardList } from '/@/api/clipboard/model';
+  import { IClipboardList } from '../../api/clipboard/model';
 
   defineComponent({
     name: 'HomeIndex',

@@ -1,4 +1,4 @@
-import { IClipboardList } from '/@/api/clipboard/model';
+import { IClipboardList } from '../../../src/api/clipboard/model';
 
 /**
  * indexDB
