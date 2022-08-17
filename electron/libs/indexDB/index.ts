@@ -158,6 +158,32 @@ class IndexDB {
       console.log('数据删除失败');
     };
   }
+  /**
+   * 查询数据
+   */
+  queryData(queryData: string) {
+    const storeName = this.database.name;
+    const db = this.db;
+    console.log('🚀 ~ file: index.ts ~ line 165 ~ IndexDB ~ queryData ~ queryData', queryData);
+    const transaction = db.transaction([storeName], 'readwrite'); // 事务
+
+    const objectStore = transaction.objectStore(storeName).index('content'); // 仓库对象
+    const request = objectStore.get(queryData);
+
+    return new Promise((resolve, reject) => {
+      request.onerror = function (event) {
+        console.log('事务失败');
+        reject(event);
+      };
+
+      request.onsuccess = function (event) {
+        console.log('主键查询结果: ', [request.result]);
+        resolve(request.result ? [request.result] : []);
+      };
+    });
+
+    return request.result;
+  }
 }
 
 export default IndexDB;

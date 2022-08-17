@@ -1,28 +1,72 @@
 <template>
-  <Table :dataSource="clipboardList" :columns="columns">
-    <template #bodyCell="{ record, index, column }">
-      <!-- 内容 -->
-      <template v-if="column.key === 'content'">
-        <template v-if="record.type === 'text'">
-          {{ record.content }}
+  <div class="container">
+    <Form
+      ref="formRef"
+      name="advanced_search"
+      class="ant-advanced-search-form"
+      :model="formState"
+      @finish="onFinish"
+      @reset="onReset"
+    >
+      <Row :gutter="24">
+        <Col :span="8">
+          <FormItem name="queryData" label="搜索内容">
+            <Input v-model:value="formState.queryData" placeholder="placeholder" />
+          </FormItem>
+        </Col>
+        <!-- <template v-for="i in 10" :key="i">
+        <Col v-show="expand || i <= 6" :span="8">
+          <FormItem
+            :name="`field-${i}`"
+            :label="`field-${i}`"
+            :rules="[{ required: true, message: 'input something' }]"
+          >
+            <Input v-model:value="formState[`field-${i}`]" placeholder="placeholder" />
+          </FormItem>
+        </Col>
+      </template> -->
+      </Row>
+      <Row>
+        <Col :span="24" style="text-align: right">
+          <Button type="primary" html-type="submit">Search</Button>
+          <Button style="margin: 0 8px" html-type="reset">Clear</Button>
+          <a style="font-size: 12px" @click="expand = !expand">
+            <template v-if="expand">
+              <UpOutlined />
+            </template>
+            <template v-else>
+              <DownOutlined />
+            </template>
+            Collapse
+          </a>
+        </Col>
+      </Row>
+    </Form>
+    <Table :dataSource="clipboardList" :columns="columns">
+      <template #bodyCell="{ record, column }">
+        <!-- 内容 -->
+        <template v-if="column.key === 'content'">
+          <template v-if="record.type === 'text'">
+            {{ record.content }}
+          </template>
+          <template v-else-if="record.type === 'image'">
+            <!-- <img :src="JSON.parse(record.content)" style="width: 100px" /> -->
+            {{ record.content }}
+          </template>
         </template>
-        <template v-else-if="record.type === 'image'">
-          <!-- <img :src="JSON.parse(record.content)" style="width: 100px" /> -->
-          {{ record.content }}
+        <!-- 操作栏 -->
+        <template v-else-if="column.key === 'action'">
+          <Button size="small" @click="handleDeleteData(record)" v-if="record._id">X</Button>
         </template>
       </template>
-      <!-- 操作栏 -->
-      <template v-else-if="column.key === 'action'">
-        <Button size="small" @click="handleDeleteData(record._id, index)">X</Button>
-      </template>
-    </template>
-  </Table>
+    </Table>
+  </div>
 </template>
 
 <script lang="ts" setup>
-  import { Button, Table } from 'ant-design-vue';
+  import { Button, Table, Form, Input, FormInstance, Row, Col, FormItem } from 'ant-design-vue';
   import IndexDB from '../../../electron/libs/indexDB';
-  import { onMounted, ref, defineComponent } from 'vue';
+  import { onMounted, ref, defineComponent, reactive } from 'vue';
   import { IClipboardList } from '../../api/clipboard/model';
 
   defineComponent({
@@ -59,14 +103,44 @@
     },
   ];
 
+  let getAllDataRef = ref();
+
   const indexDB = new IndexDB();
 
   const clipboardList = ref<IClipboardList[]>([]);
 
-  async function handleDeleteData(id: string | number, index: number) {
-    await indexDB.deleteData(id);
-    clipboardList.value.splice(index, 1);
+  async function handleDeleteData(record: IClipboardList) {
+    await indexDB.deleteData(record._id!);
+    record._id = '';
+    record.content = '';
   }
+
+  const expand = ref(false);
+  const formRef = ref<FormInstance>();
+  const formState = reactive({
+    queryData: '',
+  });
+  const onFinish = async (values: any) => {
+    console.log('Received values of form: ', values);
+    console.log('formState: ', formState);
+    const data = await indexDB.queryData(formState.queryData);
+    console.log('🚀 ~ file: index.vue ~ line 121 ~ onFinish ~ data', data);
+    clipboardList.value = data as IClipboardList[];
+    window.clearInterval(getAllDataRef.value);
+  };
+
+  async function getAllData() {
+    const data = await indexDB.getData();
+    clipboardList.value = data as any[];
+  }
+
+  const onReset = () => {
+    console.log('reset');
+
+    getAllDataRef.value = setInterval(async () => {
+      getAllData();
+    }, 1000);
+  };
 
   onMounted(() => {
     /**
@@ -74,11 +148,15 @@
      */
     indexDB.init();
 
-    setInterval(async () => {
+    getAllDataRef.value = setInterval(async () => {
       const data = await indexDB.getData();
       clipboardList.value = data as any[];
     }, 1000);
   });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  .container {
+    padding: 16px;
+  }
+</style>
