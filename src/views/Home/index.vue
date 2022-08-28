@@ -19,15 +19,6 @@
         <Col :span="24" style="text-align: right">
           <Button type="primary" html-type="submit">Search</Button>
           <Button style="margin: 0 8px" html-type="reset">Clear</Button>
-          <!-- <a style="font-size: 12px" @click="expand = !expand">
-            <template v-if="expand">
-              <UpOutlined />
-            </template>
-            <template v-else>
-              <DownOutlined />
-            </template>
-            Collapse
-          </a> -->
         </Col>
       </Row>
     </Form>
@@ -35,13 +26,13 @@
       <template #bodyCell="{ record, column, index }">
         <!-- 内容 -->
         <template v-if="column.key === 'content'">
-          <template v-if="record.type === 'text'">
+          <div class="content" v-html="record.content"></div>
+          <!-- <template v-if="record.type === 'text'">
             {{ record.content }}
           </template>
           <template v-else-if="record.type === 'image'">
-            <!-- <img :src="JSON.parse(record.content)" style="width: 100px" /> -->
             {{ record.content }}
-          </template>
+          </template> -->
         </template>
         <!-- 操作栏 -->
         <template v-else-if="column.key === 'action'">
@@ -69,12 +60,12 @@
       key: '_id',
       width: 140,
     },
-    {
-      title: '类型',
-      dataIndex: 'type',
-      key: 'type',
-      width: 100,
-    },
+    // {
+    //   title: '类型',
+    //   dataIndex: 'type',
+    //   key: 'type',
+    //   width: 100,
+    // },
     {
       title: '内容',
       dataIndex: 'content',
@@ -109,7 +100,6 @@
     }
   }
 
-  const expand = ref(false);
   const formRef = ref<FormInstance>();
   const formState = reactive({
     queryData: '',
@@ -159,5 +149,11 @@
 
   .ant-advanced-search-form {
     margin-bottom: 10px;
+  }
+
+  .content {
+    :deep(img) {
+      width: 100%;
+    }
   }
 </style>
