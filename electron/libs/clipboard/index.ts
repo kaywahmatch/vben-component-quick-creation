@@ -8,9 +8,9 @@ interface Options {
 }
 
 class ClipboardObserver {
-  timer: NodeJS.Timeout;
-  beforeText: string;
-  beforeImage: NativeImage;
+  timer: NodeJS.Timeout | undefined | number;
+  beforeText: string | undefined;
+  beforeImage: NativeImage | undefined;
 
   duration = 500;
   textChange: (text: string, beforeText: string) => void;

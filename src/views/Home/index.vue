@@ -26,13 +26,13 @@
       <template #bodyCell="{ record, column, index }">
         <!-- 内容 -->
         <template v-if="column.key === 'content'">
-          <div class="content" v-html="record.content"></div>
-          <!-- <template v-if="record.type === 'text'">
-            {{ record.content }}
+          <template v-if="record.type === 'text'">
+            <!-- {{ record.content }} -->
+            <div class="content" v-html="record.content"></div>
           </template>
           <template v-else-if="record.type === 'image'">
-            {{ record.content }}
-          </template> -->
+            <img :src="record.content" />
+          </template>
         </template>
         <!-- 操作栏 -->
         <template v-else-if="column.key === 'action'">
@@ -60,12 +60,12 @@
       key: '_id',
       width: 140,
     },
-    // {
-    //   title: '类型',
-    //   dataIndex: 'type',
-    //   key: 'type',
-    //   width: 100,
-    // },
+    {
+      title: '类型',
+      dataIndex: 'type',
+      key: 'type',
+      width: 100,
+    },
     {
       title: '内容',
       dataIndex: 'content',
