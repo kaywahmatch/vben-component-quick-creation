@@ -11,7 +11,7 @@
       <Row :gutter="24">
         <Col :span="8">
           <FormItem name="queryData" label="搜索内容">
-            <Input v-model:value="formState.queryData" placeholder="placeholder" />
+            <Input v-model:value="formState.queryData" placeholder="请输入搜索关键字" />
           </FormItem>
         </Col>
       </Row>
@@ -31,7 +31,9 @@
             <div class="content" v-html="record.content"></div>
           </template>
           <template v-else-if="record.type === 'image'">
-            <img :src="record.content" />
+            <div class="content">
+              <img :src="record.content" />
+            </div>
           </template>
         </template>
         <!-- 操作栏 -->
@@ -104,12 +106,9 @@
   const formState = reactive({
     queryData: '',
   });
-  const onFinish = async (values: any) => {
+  const onFinish = async () => {
     isSearch.value = true;
-    console.log('Received values of form: ', values);
-    console.log('formState: ', formState);
     const data = await indexDB.queryData(formState.queryData);
-    console.log('🚀 ~ file: index.vue ~ line 121 ~ onFinish ~ data', data);
     clipboardList.value = data as IClipboardList[];
     window.clearInterval(getAllDataRef.value);
   };

@@ -49,9 +49,11 @@ export default defineConfig(({ command, mode }) => {
     css: {
       preprocessorOptions: {
         less: {
-          modifyVars: {
-            hack: `true; @import (reference) "${resolve('src/design/var/index.less')}";`,
-          },
+          // modifyVars: {
+          //   hack: `true; @import (reference) "${resolve('src/design/var/index.less')}";`,
+          // },
+          additionalData: `@import '/@/design/var/index.less';`,
+          // `@import src/design/var/index.less`
           javascriptEnabled: true,
         },
       },

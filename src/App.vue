@@ -18,3 +18,21 @@
     },
   });
 </script>
+
+<style lang="less">
+  body {
+    background-color: rgb(153, 28, 87) !important;
+    color: #fff;
+
+    & .ant-layout-header {
+      color: #fff;
+    }
+  }
+
+  body,
+  #app,
+  .ant-layout {
+    min-height: 100vh;
+    color: #fff;
+  }
+</style>

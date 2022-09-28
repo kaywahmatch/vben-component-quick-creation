@@ -2,7 +2,9 @@
   <Layout>
     <LayoutHeader> LayoutHeader </LayoutHeader>
     <Layout>
-      <LayoutSider> 菜单导航 </LayoutSider>
+      <LayoutSider>
+        <LayoutsMenu />
+      </LayoutSider>
       <LayoutContent>
         <RouterView />
       </LayoutContent>
@@ -13,6 +15,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue';
   import { Layout, LayoutHeader, LayoutContent, LayoutSider } from 'ant-design-vue';
+  import LayoutsMenu from './Menu/index.vue';
 
   export default defineComponent({
     name: 'DefaultLayout',
@@ -22,6 +25,7 @@
       LayoutHeader,
       LayoutContent,
       LayoutSider,
+      LayoutsMenu,
     },
 
     setup() {
