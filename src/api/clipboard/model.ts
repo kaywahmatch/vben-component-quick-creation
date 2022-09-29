@@ -5,3 +5,20 @@ export interface IClipboardList {
   content?: string;
   category?: string;
 }
+
+export interface ICategory extends IClipboardList {
+  categoryId: string;
+}
+
+export interface IAddCategory {
+  createTime?: string;
+  _id?: string;
+  name?: string;
+  sort?: string;
+}
+
+export interface IIndexDBResponse {
+  code: number;
+  msg: string;
+  data: any | unknown;
+}

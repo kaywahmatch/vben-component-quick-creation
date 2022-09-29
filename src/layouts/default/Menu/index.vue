@@ -6,18 +6,18 @@
       mode="inline"
       :open-keys="openKeys"
       @openChange="onOpenChange"
+      @click="onClickMenu"
     >
       <SubMenu key="sub1">
         <template #icon>
           <MailOutlined />
         </template>
         <template #title>Navigation One</template>
-        <MenuItem key="1">Option 1</MenuItem>
-        <MenuItem key="2">Option 2</MenuItem>
-        <MenuItem key="3">Option 3</MenuItem>
-        <MenuItem key="4">Option 4</MenuItem>
+        <MenuItem key="/index">首页</MenuItem>
+        <MenuItem key="/category">分类</MenuItem>
+        <MenuItem key="/record">记录</MenuItem>
       </SubMenu>
-      <SubMenu key="sub2">
+      <!-- <SubMenu key="sub2">
         <template #icon></template>
         <template #title>
           <AppstoreOutlined />
@@ -39,7 +39,7 @@
         <MenuItem key="10">Option 10</MenuItem>
         <MenuItem key="11">Option 11</MenuItem>
         <MenuItem key="12">Option 12</MenuItem>
-      </SubMenu>
+      </SubMenu> -->
     </Menu>
   </div>
 </template>
@@ -48,6 +48,14 @@
   import { defineComponent, reactive, toRefs } from 'vue';
   import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons-vue';
   import { Menu, MenuItem, SubMenu } from 'ant-design-vue';
+  import { MenuClickEventHandler, MenuInfo } from 'ant-design-vue/lib/menu/src/interface';
+  import { useRouter } from 'vue-router';
+
+  interface OnClickMenu {
+    item: object;
+    key: string;
+    keyPath: string[];
+  }
 
   export default defineComponent({
     name: 'LayoutsMenu',
@@ -73,9 +81,20 @@
           state.openKeys = latestOpenKey ? [latestOpenKey] : [];
         }
       };
+
+      const router = useRouter();
+
+      const onClickMenu = ({ item, key, keyPath }: MenuInfo) => {
+        console.log('on lick', { item, key, keyPath });
+        router.push({
+          path: key,
+        });
+      };
+
       return {
         ...toRefs(state),
         onOpenChange,
+        onClickMenu,
       };
     },
   });

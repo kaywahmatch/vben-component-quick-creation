@@ -22,12 +22,11 @@
         </Col>
       </Row>
     </Form>
-    <Table :dataSource="clipboardList" :columns="homeColumns">
+    <Table :dataSource="recordList" :columns="recordColumns">
       <template #bodyCell="{ record, column, index }">
         <!-- 内容 -->
         <template v-if="column.key === 'content'">
           <template v-if="record.type === 'text'">
-            <!-- {{ record.content }} -->
             <div class="content" v-html="record.content"></div>
           </template>
           <template v-else-if="record.type === 'image'">
@@ -35,6 +34,19 @@
               <img :src="record.content" />
             </div>
           </template>
+        </template>
+        <!-- 分类 -->
+        <template v-if="column.key === 'categoryId'">
+          <Select
+            style="width: 100%"
+            :options="categoryList"
+            :fieldNames="{
+              label: 'name',
+              value: '_id',
+            }"
+            v-model:value="record.categoryId"
+            @change="(value: string) => handleChangeCategory(value, record)"
+          />
         </template>
         <!-- 操作栏 -->
         <template v-else-if="column.key === 'action'">
@@ -47,7 +59,9 @@
           >
             删除
           </Button>
-          <Button size="small" @click="handleSaveData(record)" v-if="record._id"> 保存 </Button>
+          <Button size="small" @click="handleSaveData(record)" v-if="record._id" type="primary">
+            <CopyText :copyText="record.content" showInnerText="复制" />
+          </Button>
         </template>
       </template>
     </Table>
@@ -55,63 +69,68 @@
 </template>
 
 <script lang="ts" setup>
-  import { Button, Table, Form, Input, FormInstance, Row, Col, FormItem } from 'ant-design-vue';
-  import IndexDB from '../../../electron/libs/indexDB';
-  import RecordDB from '../../../electron/libs/indexDB/record';
-
+  import {
+    Button,
+    Table,
+    Form,
+    Input,
+    FormInstance,
+    Row,
+    Col,
+    FormItem,
+    Select,
+  } from 'ant-design-vue';
+  import Record from '../../../electron/libs/indexDB/record';
+  import CategoryDB from '../../../electron/libs/indexDB/category';
   import { onMounted, ref, defineComponent, reactive } from 'vue';
-  import { IClipboardList } from '../../api/clipboard/model';
+  import { ICategory, IClipboardList } from '../../api/clipboard/model';
 
-  import { homeColumns } from './data';
+  import CopyText from '/@/components/CopyText/CopyText.vue';
+
+  import { recordColumns } from './data';
 
   defineComponent({
     name: 'HomeIndex',
   });
 
+  const categoryDB = new CategoryDB();
+
   let getAllDataRef = ref();
 
-  const indexDB = new IndexDB();
-  const recordDB = new RecordDB();
+  const recordData = new Record();
 
-  const clipboardList = ref<IClipboardList[]>([]);
+  const recordList = ref<IClipboardList[]>([]);
+  const categoryList = ref<ICategory[]>([]);
 
   const isSearch = ref(false);
 
-  async function handleDeleteData(record: IClipboardList, index: number) {
-    await indexDB.deleteData(record._id!);
+  async function handleDeleteData(record: ICategory, index: number) {
+    await recordData.deleteData(record._id!);
     record._id = '';
     record.content = '';
-    if (isSearch.value) {
-      clipboardList.value.splice(index, 1);
-    }
+    // if (isSearch.value) {
+    recordList.value.splice(index, 1);
+    // }
   }
 
-  async function handleSaveData(record: IClipboardList) {
+  async function handleSaveData(record: ICategory) {
     console.log(record);
-    recordDB.addData([
-      {
-        ...record,
-        categoryId: '',
-      },
-    ]);
   }
 
   const formRef = ref<FormInstance>();
-
   const formState = reactive({
     queryData: '',
   });
-
   const onFinish = async () => {
     isSearch.value = true;
-    const data = await indexDB.queryData(formState.queryData);
-    clipboardList.value = data as IClipboardList[];
+    const data = await recordData.queryData(formState.queryData);
+    recordList.value = data as ICategory[];
     window.clearInterval(getAllDataRef.value);
   };
 
   async function getAllData() {
-    const data = await indexDB.getData();
-    clipboardList.value = data as any[];
+    const data = await recordData.getData();
+    recordList.value = data as any[];
   }
 
   const onReset = () => {
@@ -124,16 +143,32 @@
     }, 1000);
   };
 
-  onMounted(() => {
+  function handleChangeCategory(value: string, option: ICategory | Array<ICategory>) {
+    console.log(value, option);
+    recordData.updateData(option);
+  }
+
+  async function getData() {
+    const data = await recordData.getData();
+    recordList.value = data as ICategory[];
+  }
+
+  onMounted(async () => {
     /**
      * 初始化
      */
-    indexDB.init();
-    recordDB.init();
+    recordData.init();
+    categoryDB.init();
 
-    getAllDataRef.value = setInterval(async () => {
-      const data = await indexDB.getData();
-      clipboardList.value = data as any[];
+    // getAllDataRef.value = setInterval(async () => {
+    //   const data = await recordData.getData();
+    //   recordList.value = data as ICategory[];
+    // }, 1000);
+
+    setTimeout(async () => {
+      await getData();
+      categoryList.value = await categoryDB.getData();
+      console.log(categoryList.value);
     }, 1000);
   });
 </script>

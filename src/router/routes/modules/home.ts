@@ -3,7 +3,7 @@ import type { AppRouteModule } from '/@/router/types';
 import { LAYOUT } from '/@/router/constant';
 
 const home: AppRouteModule = {
-  path: '/home',
+  path: '/',
   name: 'Home',
   component: LAYOUT,
   // redirect: '/home/index',
@@ -21,6 +21,24 @@ const home: AppRouteModule = {
       meta: {
         icon: 'ion:grid-outline',
         title: '首页',
+      },
+    },
+    {
+      path: 'category',
+      name: 'Category',
+      component: () => import('/@/views/Category/index.vue'),
+      meta: {
+        icon: 'ion:grid-outline',
+        title: '分类',
+      },
+    },
+    {
+      path: 'record',
+      name: 'Record',
+      component: () => import('/@/views/Record/index.vue'),
+      meta: {
+        icon: 'ion:grid-outline',
+        title: '记录',
       },
     },
   ],

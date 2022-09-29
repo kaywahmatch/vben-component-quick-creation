@@ -52,4 +52,8 @@
       padding-top: 56px;
     }
   }
+
+  .ant-advanced-search-form {
+    margin-bottom: 10px;
+  }
 </style>
