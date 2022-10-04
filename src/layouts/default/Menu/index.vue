@@ -12,7 +12,7 @@
         <template #icon>
           <MailOutlined />
         </template>
-        <template #title>Navigation One</template>
+        <template #title>菜单</template>
         <MenuItem key="/index">首页</MenuItem>
         <MenuItem key="/category">分类</MenuItem>
         <MenuItem key="/record">记录</MenuItem>
